@@ -39,51 +39,22 @@ void setup() {
   }
   //output file
   output=createWriter("skan.asc");  //plik wynikowy *.asc
-}
 
-//============== MAIN PROGRAM =================
-
-void draw() {
-  PImage photo=createImage(cam.width,cam.height,RGB);
-  cam.read();
-  delay(2000);
-  for (itr=0;itr<photoCount;itr++) {
-    cam.read();
-    photo.loadPixels();
-    cam.loadPixels();
-    for (int n=0;n<photo.width*photo.height;n++){
-      photo.pixels[n]=cam.pixels[n];
-    }
-    photo.updatePixels();
-    set(20,20,cam);
-    String nazwaPliku="photo-"+nf(itr+1, 3)+".png";
-    photo.save(nazwaPliku);
-    rotate();
-    delay(500);
-  }
-  count();
-  noLoop();
- 
-}
-
-void count(){
   for (itr=0; itr<photoCount; itr++){
-    String nazwaPliku="photo-"+nf(itr+1, 3)+".png";
-    PImage skan=loadImage(nazwaPliku);
     String nazwaPliku2="odzw-"+nf(itr+1, 3)+".png";
-    PImage odwz=createImage(skan.width, skan.height, RGB);
-    skan.loadPixels();
+    PImage odwz=createImage(images[itr].width, images[itr].height, RGB);
+    images[itr].loadPixels();
     odwz.loadPixels();
     int currentPos;
     fi=itr*katOperacji;
     println(fi);
 
-    for(row=0; row<skan.height; row++){  //starting row analysis
+    for(row=0; row<images[itr].height; row++){  //starting row analysis
     maxBrightPos=0;
     maxBright=0;
-      for(col=0; col<skan.width; col++){
-        currentPos = row * skan.width + col;
-        pixBright=brightness(skan.pixels[currentPos]);
+      for(col=0; col<images[itr].width; col++){
+        currentPos = row * images[itr].width + col;
+        pixBright=brightness(images[itr].pixels[currentPos]);
         if(pixBright>maxBright){
           maxBright=pixBright;
           maxBrightPos=currentPos;
@@ -93,7 +64,7 @@ void count(){
      
       odwz.pixels[maxBrightPos]=white; //setting brightest pixel white
      
-      b=((maxBrightPos+1-row*skan.width)-skan.width/2)/pxmmpoz;
+      b=((maxBrightPos+1-row*images[itr].width)-images[itr].width/2)/pxmmpoz;
       ro=b/sin(katLaser);
       //output.println(b + ", " + prevMaxBrightPos + ", " + maxBrightPos); //I used this for debugging
      
